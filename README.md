@@ -2,7 +2,7 @@
 
 ## Integrantes
 - Santiago León Alba — lionlonx
-- Julian Camilo Torres Cañón — camilotorres0413
+- Julian Camilo Torres Cañón — camilotorres0413-hub
 
 ## Descripción
 API REST sencilla para gestionar notas de trabajo de un equipo (`team-notes-api`).
