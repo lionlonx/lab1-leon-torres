@@ -2,7 +2,7 @@
 
 ## Integrantes
 - Santiago León Alba — lionlonx
-- Julian Camilo Torres Cañón — camilotorres0413
+- Julian Camilo Torres Cañón — camilotorres0413-hub
 
 ## Descripción
 API REST sencilla para gestionar notas de trabajo de un equipo (`team-notes-api`).
@@ -10,7 +10,7 @@ Permite crear, consultar, actualizar y eliminar notas, cada una con título,
 contenido, autor y fecha de creación.
 
 ## Tecnologías
-- Python 3.12
+- Python 3.12 (lenguaje del backend) con Uvicorn como servidor
 - FastAPI
 - SQLAlchemy (ORM)
 - PostgreSQL 16
