@@ -1,12 +1,14 @@
 import os
+from typing import List
 
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
 
-from . import models  # noqa: F401  (registers the Note table on Base.metadata)
-from .database import Base, engine
+from . import crud, models, schemas  # noqa: F401  (models registers the Note table)
+from .database import Base, engine, get_db
 
 app = FastAPI(title="team-notes-api")
 
@@ -32,3 +34,16 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 @app.get("/health")
 def health_check():
     return {"status": "ok", "environment": os.getenv("APP_ENV", "development")}
+
+
+@app.get("/notes", response_model=List[schemas.NoteOut])
+def list_notes(db: Session = Depends(get_db)):
+    return crud.get_notes(db)
+
+
+@app.get("/notes/{note_id}", response_model=schemas.NoteOut)
+def get_note(note_id: int, db: Session = Depends(get_db)):
+    note = crud.get_note(db, note_id)
+    if note is None:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return note
