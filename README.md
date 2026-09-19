@@ -10,7 +10,7 @@ Permite crear, consultar, actualizar y eliminar notas, cada una con título,
 contenido, autor y fecha de creación.
 
 ## Tecnologías
-- Python 3.12 con Uvicorn como servidor
+- Python 3.12 (lenguaje del backend) con Uvicorn como servidor
 - FastAPI
 - SQLAlchemy (ORM)
 - PostgreSQL 16
