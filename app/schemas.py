@@ -1,8 +1,5 @@
 from datetime import datetime
-
-from pydantic import BaseModel, ConfigDict
-
-from typing import Optional
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class NoteOut(BaseModel):
@@ -14,15 +11,12 @@ class NoteOut(BaseModel):
     author: str
     created_at: datetime
 
-class NoteBase(BaseModel):
-    title: str
-    content: str
-    author: Optional[str] = "Anonymous"
 
-class NoteCreate(NoteBase):
+class NoteCreate(BaseModel):
+    title: str = Field(..., min_length=1)
+    content: str = Field(..., min_length=1)
+    author: str = Field(..., min_length=1)
+
+
+class NoteUpdate(NoteCreate):
     pass
-
-class NoteUpdate(BaseModel):
-    title: Optional[str] = None
-    content: Optional[str] = None
-    author: Optional[str] = None
