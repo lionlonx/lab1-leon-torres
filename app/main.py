@@ -47,3 +47,21 @@ def get_note(note_id: int, db: Session = Depends(get_db)):
     if note is None:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
+    
+@app.post("/notes", response_model=schemas.NoteOut, status_code=201)
+def create_note(note: schemas.NoteCreate, db: Session = Depends(get_db)):
+    return crud.create_note(db=db, note=note)
+
+@app.put("/notes/{note_id}", response_model=schemas.NoteOut)
+def update_note(note_id: int, note: schemas.NoteUpdate, db: Session = Depends(get_db)):
+    db_note = crud.update_note(db=db, note_id=note_id, note=note)
+    if db_note is None:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return db_note
+
+@app.delete("/notes/{note_id}", status_code=204)
+def delete_note(note_id: int, db: Session = Depends(get_db)):
+    db_note = crud.delete_note(db=db, note_id=note_id)
+    if db_note is None:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return None

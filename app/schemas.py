@@ -1,6 +1,5 @@
 from datetime import datetime
-
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class NoteOut(BaseModel):
@@ -11,3 +10,13 @@ class NoteOut(BaseModel):
     content: str
     author: str
     created_at: datetime
+
+
+class NoteCreate(BaseModel):
+    title: str = Field(..., min_length=1)
+    content: str = Field(..., min_length=1)
+    author: str = Field(..., min_length=1)
+
+
+class NoteUpdate(NoteCreate):
+    pass

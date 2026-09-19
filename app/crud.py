@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from . import models
+from . import models, schemas
 
 
 def get_notes(db: Session):
@@ -9,3 +9,35 @@ def get_notes(db: Session):
 
 def get_note(db: Session, note_id: int):
     return db.query(models.Note).filter(models.Note.id == note_id).first()
+def create_note(db: Session, note: schemas.NoteCreate):
+    db_note = models.Note(
+        title=note.title,
+        content=note.content,
+        author=note.author
+    )
+    db.add(db_note)
+    db.commit()
+    db.refresh(db_note)
+    return db_note
+
+def update_note(db: Session, note_id: int, note: schemas.NoteUpdate):
+    db_note = get_note(db, note_id)
+    if not db_note:
+        return None
+    
+    note_data = note.model_dump(exclude_unset=True)
+    for key, value in note_data.items():
+        setattr(db_note, key, value)
+        
+    db.commit()
+    db.refresh(db_note)
+    return db_note
+
+def delete_note(db: Session, note_id: int):
+    db_note = get_note(db, note_id)
+    if not db_note:
+        return None
+    
+    db.delete(db_note)
+    db.commit()
+    return db_note
