@@ -24,3 +24,9 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def init_db() -> None:
+    from . import models  # noqa: F401  (registra la tabla notes en Base.metadata)
+
+    Base.metadata.create_all(bind=engine)

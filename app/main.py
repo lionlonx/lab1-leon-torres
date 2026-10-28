@@ -1,20 +1,22 @@
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from . import models  # noqa: F401  (models registers the Note table)
-from .database import Base, engine
+from .database import init_db
 from .errors import register_exception_handlers
 from .routers import notes
 
-app = FastAPI(title="team-notes-api")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+
+
+app = FastAPI(title="team-notes-api", lifespan=lifespan)
 register_exception_handlers(app)
 app.include_router(notes.router)
-
-
-@app.on_event("startup")
-def on_startup() -> None:
-    Base.metadata.create_all(bind=engine)
 
 
 @app.get("/health")
