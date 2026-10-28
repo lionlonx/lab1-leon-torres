@@ -19,4 +19,4 @@ class NoteCreate(BaseModel):
 
 
 class NoteUpdate(NoteCreate):
-    pass
+    """PUT reemplaza la nota completa: exige los mismos campos que al crearla."""
