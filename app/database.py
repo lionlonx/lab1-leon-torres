@@ -3,15 +3,26 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DB_USER = os.getenv("DB_USER", "team_notes_user")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "change_this_password")
-DB_HOST = os.getenv("DB_HOST", "db")
-DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "team_notes")
+INSECURE_PASSWORDS = {"", "change_this_password", "postgres", "password", "admin"}
 
-DATABASE_URL = os.getenv("DATABASE_URL") or (
-    f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+
+def build_database_url() -> str:
+    url = os.getenv("DATABASE_URL")
+    if url:
+        return url
+    password = os.getenv("DB_PASSWORD", "")
+    if password in INSECURE_PASSWORDS:
+        raise RuntimeError(
+            "DB_PASSWORD no está definido o usa un valor de ejemplo; configúralo en .env"
+        )
+    user = os.getenv("DB_USER", "team_notes_user")
+    host = os.getenv("DB_HOST", "db")
+    port = os.getenv("DB_PORT", "5432")
+    name = os.getenv("DB_NAME", "team_notes")
+    return f"postgresql://{user}:{password}@{host}:{port}/{name}"
+
+
+DATABASE_URL = build_database_url()
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
